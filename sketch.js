@@ -148,15 +148,3 @@ function drawOverlay() {
     }
   }
 }
-
-// 繪製並移動圖片
-function displayMovingImage(keypoint, img, direction) {
-  let x = keypoint.x + frameCount * 0.5 * direction;
-  let y = keypoint.y;
-  if (direction === 1) {
-    if (x > width) x = 0;
-  } else {
-    if (x < 0) x = width;
-  }
-  image(img, x - 25, y - 25, 50, 50); // 繪製圖片
-}
