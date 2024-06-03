@@ -1,12 +1,7 @@
-/* MoveNet Skeleton - Steve's Makerspace (most of this code is from TensorFlow)
-
-MoveNet is developed by TensorFlow:
-https://www.tensorflow.org/hub/tutorials/movenet
-
-*/
-
 let video, bodypose, pose, keypoint, detector;
 let poses = [];
+let myImage;
+let nameID = "林揚紘 412730441"; // Your student ID and name
 
 async function init() {
   const detectorConfig = {
@@ -40,6 +35,9 @@ async function setup() {
   video.hide();
   await init();
 
+  // Load your image
+  myImage = loadImage('upload_fc4425b4ca387e988f6909176caae0ca.gif');
+
   stroke(255);
   strokeWeight(5);
 }
@@ -47,6 +45,7 @@ async function setup() {
 function draw() {
   image(video, 0, 0);
   drawSkeleton();
+  drawOverlay();
   // flip horizontal
   cam = get();
   translate(cam.width, 0);
@@ -59,7 +58,7 @@ function drawSkeleton() {
   for (let i = 0; i < poses.length; i++) {
     pose = poses[i];
     // shoulder to wrist
-    for (j = 5; j < 9; j++) {
+    for (let j = 5; j < 9; j++) {
       if (pose.keypoints[j].score > 0.1 && pose.keypoints[j + 2].score > 0.1) {
         partA = pose.keypoints[j];
         partB = pose.keypoints[j + 2];
@@ -71,56 +70,83 @@ function drawSkeleton() {
     partB = pose.keypoints[6];
     if (partA.score > 0.1 && partB.score > 0.1) {
       line(partA.x, partA.y, partB.x, partB.y);
-      
     }
     // hip to hip
     partA = pose.keypoints[11];
     partB = pose.keypoints[12];
     if (partA.score > 0.1 && partB.score > 0.1) {
       line(partA.x, partA.y, partB.x, partB.y);
-      
     }
     // shoulders to hips
     partA = pose.keypoints[5];
     partB = pose.keypoints[11];
     if (partA.score > 0.1 && partB.score > 0.1) {
       line(partA.x, partA.y, partB.x, partB.y);
-      
     }
     partA = pose.keypoints[6];
     partB = pose.keypoints[12];
     if (partA.score > 0.1 && partB.score > 0.1) {
       line(partA.x, partA.y, partB.x, partB.y);
-      
     }
     // hip to foot
-    for (j = 11; j < 15; j++) {
+    for (let j = 11; j < 15; j++) {
       if (pose.keypoints[j].score > 0.1 && pose.keypoints[j + 2].score > 0.1) {
         partA = pose.keypoints[j];
         partB = pose.keypoints[j + 2];
         line(partA.x, partA.y, partB.x, partB.y);
-        
       }
     }
   }
 }
 
-/* Points (view on left of screen = left part - when mirrored)
-  0 nose
-  1 left eye
-  2 right eye
-  3 left ear
-  4 right ear
-  5 left shoulder
-  6 right shoulder
-  7 left elbow
-  8 right elbow
-  9 left wrist
-  10 right wrist
-  11 left hip
-  12 right hip
-  13 left kneee
-  14 right knee
-  15 left foot
-  16 right foot
-*/
+function drawOverlay() {
+  for (let i = 0; i < poses.length; i++) {
+    pose = poses[i];
+    // Display image on eyes
+    displayImage(pose.keypoints[1], myImage); // Left eye
+    displayImage(pose.keypoints[2], myImage); // Right eye
+    // Display image on shoulders
+    displayImage(pose.keypoints[5], myImage); // Left shoulder
+    displayImage(pose.keypoints[6], myImage); // Right shoulder
+    // Display moving image on wrists
+    displayMovingImage(pose.keypoints[9], myImage, -1); // Left wrist
+    displayMovingImage(pose.keypoints[10], myImage, -1); // Right wrist
+    // Display image on ears and animate them moving from left to right
+    displayMovingImage(pose.keypoints[3], myImage, 1); // Left ear
+    displayMovingImage(pose.keypoints[4], myImage, 1); // Right ear
+    // Display name and ID above the head
+    displayTextAboveHead(pose.keypoints[0], nameID);
+  }
+}
+
+function displayImage(keypoint, img) {
+  if (keypoint.score > 0.1) {
+    let x = keypoint.x;
+    let y = keypoint.y;
+    image(img, x - 25, y - 25, 50, 50); // Adjust the size and position of the image
+  }
+}
+
+function displayMovingImage(keypoint, img, direction) {
+  if (keypoint.score > 0.1) {
+    let x = keypoint.x + frameCount * 0.5 * direction;
+    let y = keypoint.y;
+    if (direction === 1) {
+      if (x > width) x = 0;
+    } else {
+      if (x < 0) x = width;
+    }
+    image(img, x - 25, y - 25, 50, 50); // Adjust the size and position of the image
+  }
+}
+
+function displayTextAboveHead(keypoint, text) {
+  if (keypoint.score > 0.1) {
+    let x = keypoint.x;
+    let y = keypoint.y - 40; // Adjust the position above the head
+    textSize(24);
+    fill(255, 0, 0);
+    textAlign(CENTER);
+    text(text, x, y);
+  }
+}
