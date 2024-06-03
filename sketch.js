@@ -108,12 +108,6 @@ function drawOverlay() {
     // Display image on shoulders
     displayImage(pose.keypoints[5], myImage); // Left shoulder
     displayImage(pose.keypoints[6], myImage); // Right shoulder
-    // Display moving image on wrists
-    displayMovingImage(pose.keypoints[9], myImage, -1); // Left wrist
-    displayMovingImage(pose.keypoints[10], myImage, -1); // Right wrist
-    // Display image on ears and animate them moving from left to right
-    displayMovingImage(pose.keypoints[3], myImage, 1); // Left ear
-    displayMovingImage(pose.keypoints[4], myImage, 1); // Right ear
     // Display name and ID above the head
     displayTextAboveHead(pose.keypoints[0], nameID);
   }
@@ -123,19 +117,6 @@ function displayImage(keypoint, img) {
   if (keypoint.score > 0.1) {
     let x = keypoint.x;
     let y = keypoint.y;
-    image(img, x - 25, y - 25, 50, 50); // Adjust the size and position of the image
-  }
-}
-
-function displayMovingImage(keypoint, img, direction) {
-  if (keypoint.score > 0.1) {
-    let x = keypoint.x + frameCount * 0.5 * direction;
-    let y = keypoint.y;
-    if (direction === 1) {
-      if (x > width) x = 0;
-    } else {
-      if (x < 0) x = width;
-    }
     image(img, x - 25, y - 25, 50, 50); // Adjust the size and position of the image
   }
 }
