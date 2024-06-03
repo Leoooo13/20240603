@@ -47,7 +47,7 @@ async function setup() {
   video.hide(); // 隱藏視頻元素
   await init(); // 初始化檢測器
   
-  img = loadImage('upload_e7b8681276bf136e02f932e89ea6fe54.gif'); // 加載您的物件圖片
+  img = loadImage('upload_fc4425b4ca387e988f6909176caae0ca.gif'); // 加載您的物件圖片
   
   stroke(255); // 設置筆觸顏色為白色
   strokeWeight(5); // 設置筆觸寬度為5
