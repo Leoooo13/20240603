@@ -158,4 +158,3 @@ function drawSkeleton() {
   14 right knee
   15 left foot
   16 right foot
-*/
