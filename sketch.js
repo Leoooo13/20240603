@@ -5,9 +5,7 @@ let studentID = "412730441"; // 學號
 let studentName = "林揚紘"; // 姓名
 
 let earOffsetX = 0; // 耳朵物件圖片的水平偏移
-let wristOffsetX = 0; // 手腕物件圖片的水平偏移
 let earDirection = 1; // 耳朵物件圖片移動方向
-let wristDirection = -1; // 手腕物件圖片移動方向
 
 // 初始化MoveNet檢測器
 async function init() {
@@ -63,16 +61,12 @@ function draw() {
 
   drawSkeleton(); // 繪製骨架
 
-  // 更新耳朵和手腕物件圖片的偏移
+  // 更新耳朵物件圖片的偏移
   earOffsetX += earDirection * 2;
-  wristOffsetX += wristDirection * 2;
 
   // 確保偏移在合理範圍內
   if (earOffsetX > 100 || earOffsetX < -100) {
     earDirection *= -1;
-  }
-  if (wristOffsetX > 100 || wristOffsetX < -100) {
-    wristDirection *= -1;
   }
 }
 
@@ -114,16 +108,6 @@ function drawSkeleton() {
       image(img, rightEar.x - 25 + earOffsetX, rightEar.y - 25, 50, 50); // 繪製圖片
     }
 
-    // 在手腕位置繪製物件圖片
-    let leftWrist = pose.keypoints[9];
-    let rightWrist = pose.keypoints[10];
-    if (leftWrist.score > 0.1) {
-      image(img, leftWrist.x - 25 + wristOffsetX, leftWrist.y - 25, 50, 50); // 繪製圖片
-    }
-    if (rightWrist.score > 0.1) {
-      image(img, rightWrist.x - 25 + wristOffsetX, rightWrist.y - 25, 50, 50); // 繪製圖片
-    }
-
     // 在頭頂上方顯示學號和姓名
     let nose = pose.keypoints[0];
     if (nose.score > 0.1) {
@@ -155,3 +139,23 @@ function drawSkeleton() {
     }
   }
 }
+
+/* Points (view on left of screen = left part - when mirrored)
+  0 nose
+  1 left eye
+  2 right eye
+  3 left ear
+  4 right ear
+  5 left shoulder
+  6 right shoulder
+  7 left elbow
+  8 right elbow
+  9 left wrist
+  10 right wrist
+  11 left hip
+  12 right hip
+  13 left knee
+  14 right knee
+  15 left foot
+  16 right foot
+*/
