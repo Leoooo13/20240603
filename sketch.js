@@ -1,3 +1,10 @@
+/* MoveNet Skeleton - Steve's Makerspace (most of this code is from TensorFlow)
+
+MoveNet is developed by TensorFlow:
+https://www.tensorflow.org/hub/tutorials/movenet
+
+*/
+
 let video, bodypose, pose, keypoint, detector; // 定義變量
 let poses = [];
 let img; // 用於存放您的物件圖片
@@ -43,9 +50,7 @@ async function setup() {
   video.hide(); // 隱藏視頻元素
   await init(); // 初始化檢測器
   
-  img = loadImage('upload_fc4425b4ca387e988f6909176caae0ca.gif', () => {
-    console.log('Image loaded');
-  }); // 加載您的物件圖片
+  img = loadImage('upload_fc4425b4ca387e988f6909176caae0ca.gif'); // 加載您的物件圖片
   
   stroke(255); // 設置筆觸顏色為白色
   strokeWeight(5); // 設置筆觸寬度為5
@@ -53,13 +58,13 @@ async function setup() {
 
 // 繪製每一幀
 function draw() {
-  // 水平翻轉視頻
+  image(video, 0, 0); // 繪製視頻到畫布上
+  drawSkeleton(); // 繪製骨架
+  // 水平翻轉圖像
   cam = get();
   translate(cam.width, 0);
   scale(-1, 1);
-  image(cam, 0, 0); // 繪製翻轉的視頻到畫布上
-
-  drawSkeleton(); // 繪製骨架
+  image(cam, 0, 0);
 
   // 更新耳朵物件圖片的偏移
   earOffsetX += earDirection * 2;
@@ -158,3 +163,4 @@ function drawSkeleton() {
   14 right knee
   15 left foot
   16 right foot
+*/
